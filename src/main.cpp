@@ -12,7 +12,6 @@
 #include <time.h>
 
 using namespace std;
-//using json = nlohmann::json;
 
 typedef struct{
 	int posicaoVertice1;
@@ -23,8 +22,9 @@ typedef struct{
 
 typedef struct{
 	int posicaoDoVertice;
-	int vertice;
 	int posicaoDeInsercao;
+	int custor;
+	int custi;
 }tReinsercao;
 
 typedef struct{
@@ -46,8 +46,6 @@ void printData(){
 		}
 		cout << endl;
 	}
-
-
 }
 
 int Swap(vector<int> &solucao, int custoSolucaoAnterior){
@@ -55,43 +53,43 @@ int Swap(vector<int> &solucao, int custoSolucaoAnterior){
 	int custoVertRetirados = 0, custoVertInseridos = 0, custoDaSolucao = custoSolucaoAnterior;
 	int tamanhoDaSolucao = solucao.size();
 	int diferencaDeCusto = 0;
+	bool flag = false;
 	tSwap melhoresVertices;
 
-	while(1){
-		for(i = 1; i < tamanhoDaSolucao - 3; i++){
-			for(j = i + 2; j< tamanhoDaSolucao - 1; j++){
-				custoVertRetirados = matrizAdj[solucao[i-1]][solucao[i]] + matrizAdj[solucao[j-1]][solucao[j]] +
-														 matrizAdj[solucao[i+1]][solucao[i]] + matrizAdj[solucao[j+1]][solucao[j]];
-				custoVertInseridos = matrizAdj[solucao[i-1]][solucao[j]] + matrizAdj[solucao[j-1]][solucao[i]] +
-														 matrizAdj[solucao[i+1]][solucao[j]] + matrizAdj[solucao[j+1]][solucao[i]];
-				
-				if((custoVertInseridos - custoVertRetirados) < diferencaDeCusto){
-					diferencaDeCusto = custoVertInseridos - custoVertRetirados;
-
-					melhoresVertices.posicaoVertice1 = i;
-					melhoresVertices.posicaoVertice2 = j;
-					melhoresVertices.vertice1 = solucao[i];
-					melhoresVertices.vertice2 = solucao[j];
-				}
+	for(i = 1; i < tamanhoDaSolucao - 3; i++){
+		for(j = i + 2; j < tamanhoDaSolucao - 1; j++){
+			custoVertRetirados = matrizAdj[solucao[i-1]][solucao[i]] + matrizAdj[solucao[j-1]][solucao[j]] +
+													 matrizAdj[solucao[i+1]][solucao[i]] + matrizAdj[solucao[j+1]][solucao[j]];
+			custoVertInseridos = matrizAdj[solucao[i-1]][solucao[j]] + matrizAdj[solucao[j-1]][solucao[i]] +
+													 matrizAdj[solucao[i+1]][solucao[j]] + matrizAdj[solucao[j+1]][solucao[i]];
+			
+			if((custoVertInseridos - custoVertRetirados) < diferencaDeCusto){
+				flag = true;
+				diferencaDeCusto = custoVertInseridos - custoVertRetirados;
+				melhoresVertices.posicaoVertice1 = i;
+				melhoresVertices.posicaoVertice2 = j;
+				melhoresVertices.vertice1 = solucao[i];
+				melhoresVertices.vertice2 = solucao[j];
 			}
-		}
-
-		if(diferencaDeCusto < 0){
-			custoDaSolucao = custoDaSolucao + diferencaDeCusto;
-
-			solucao.erase(solucao.begin()+ melhoresVertices.posicaoVertice1);
-			solucao.emplace(solucao.begin()+ melhoresVertices.posicaoVertice1, melhoresVertices.vertice1);
-
-			solucao.erase(solucao.begin()+ melhoresVertices.posicaoVertice2);
-			solucao.emplace(solucao.begin()+ melhoresVertices.posicaoVertice2, melhoresVertices.vertice2);
-
-			diferencaDeCusto = 0;
-		}else{
-			break;
 		}
 	}
 
+	if(flag){
+		custoDaSolucao = custoDaSolucao + diferencaDeCusto;
+
+		solucao.erase(solucao.begin()+ melhoresVertices.posicaoVertice2);
+		solucao.emplace(solucao.begin()+ melhoresVertices.posicaoVertice2, melhoresVertices.vertice1);
+
+		solucao.erase(solucao.begin()+ melhoresVertices.posicaoVertice1);
+		solucao.emplace(solucao.begin()+ melhoresVertices.posicaoVertice1, melhoresVertices.vertice2);
+
+		diferencaDeCusto = 0;
+		flag = false;
+	}
+
 	return custoDaSolucao;
+
+	
 }
 
 int Reinsercao(vector<int> &solucao, int tamanhoDoBloco, int custoSolucaoAnterior){
@@ -102,54 +100,43 @@ int Reinsercao(vector<int> &solucao, int tamanhoDoBloco, int custoSolucaoAnterio
 	bool flag = false;
 	tReinsercao melhorReinsercao;
 
-	cout << tamanhoDaSolucao << endl;
-
-	while(1){
-		for(i = 1; i < tamanhoDaSolucao - 1 - tamanhoDoBloco; i++){
-			custoVertRetirados = (matrizAdj[solucao[i-1]][solucao[i + tamanhoDoBloco]]) - 
-													 (matrizAdj[solucao[i]][solucao[i-1]] + matrizAdj[solucao[i+tamanhoDoBloco]][i + tamanhoDoBloco - 1]);
+	for(i = 1; i < tamanhoDaSolucao - 1 - tamanhoDoBloco; i++){
+		custoVertRetirados = matrizAdj[solucao[i-1]][solucao[i + tamanhoDoBloco]] - (matrizAdj[solucao[i]][solucao[i-1]] + matrizAdj[solucao[i+tamanhoDoBloco]][solucao[i + tamanhoDoBloco - 1]]);
+		
+		for(j = i + tamanhoDoBloco; j < tamanhoDaSolucao - tamanhoDoBloco; j++){
+			custoVertInseridos = (matrizAdj[solucao[i]][solucao[j]] + matrizAdj[solucao[j+1]][solucao[i + tamanhoDoBloco-1]]) - matrizAdj[solucao[j]][solucao[j+1]]; 
 			
-			for(j = i + tamanhoDoBloco; j < tamanhoDaSolucao - tamanhoDoBloco; j++){
-				custoVertInseridos = (matrizAdj[solucao[i]][solucao[j]] + matrizAdj[solucao[j+1]][solucao[i + tamanhoDoBloco-1]]) - 
-														 (matrizAdj[solucao[j]][solucao[j+1]]);								 
+			if((custoVertInseridos + custoVertRetirados) < diferencaDeCusto){
+				flag = true;
+				diferencaDeCusto = custoVertInseridos + custoVertRetirados;
 				
-				if((custoVertInseridos + custoVertRetirados) < diferencaDeCusto){
-					flag = true;
-					diferencaDeCusto = custoVertInseridos + custoVertRetirados;
-					
-					cout << "verices", i, j;
-
-					cout << "psiu " << diferencaDeCusto << " " << i <<" " << j<< endl;
-
-					melhorReinsercao.posicaoDoVertice = i;
-					melhorReinsercao.vertice = solucao[i];
-					melhorReinsercao.posicaoDeInsercao = j+1;
-				}
+				melhorReinsercao.posicaoDoVertice = i;
+				melhorReinsercao.posicaoDeInsercao = j + 1;
+				melhorReinsercao.custor = custoVertRetirados;
+				melhorReinsercao.custi = custoVertInseridos;
 			}
 		}
+	}
 
-		//cout << "sai" << endl;
-		if(flag){
-			//cout << "sai" << endl;
-			flag = false;
-			custoDaSolucao += diferencaDeCusto;
-			diferencaDeCusto = 0;
+	if(flag){
+		custoDaSolucao = custoDaSolucao + diferencaDeCusto;
+		
 
-			if(tamanhoDoBloco == 1){
-				solucao.insert(solucao.begin() + melhorReinsercao.posicaoDeInsercao, solucao[melhorReinsercao.posicaoDoVertice]);
-				solucao.erase(solucao.begin() + melhorReinsercao.posicaoDoVertice);
-			}else{
-				solucao.insert(solucao.begin() + melhorReinsercao.posicaoDeInsercao, solucao.begin() + melhorReinsercao.posicaoDoVertice, solucao.begin() + melhorReinsercao.posicaoDoVertice + tamanhoDoBloco);
-				solucao.erase(solucao.begin() + melhorReinsercao.posicaoDoVertice, solucao.begin() + melhorReinsercao.posicaoDoVertice + tamanhoDoBloco);
-			}
+		if(tamanhoDoBloco == 1){
+			solucao.insert(solucao.begin() + melhorReinsercao.posicaoDeInsercao, solucao[melhorReinsercao.posicaoDoVertice]);
+			solucao.erase(solucao.begin() + melhorReinsercao.posicaoDoVertice);
 		}else{
-			break;
+			solucao.insert(solucao.begin() + melhorReinsercao.posicaoDeInsercao, solucao.begin() + melhorReinsercao.posicaoDoVertice, solucao.begin() + melhorReinsercao.posicaoDoVertice + tamanhoDoBloco);
+			solucao.erase(solucao.begin() + melhorReinsercao.posicaoDoVertice, solucao.begin() + melhorReinsercao.posicaoDoVertice + tamanhoDoBloco);
 		}
+
+		diferencaDeCusto = 0;
+		flag = false;
 	}
 
 	return custoDaSolucao;
 }
-
+ 
 bool comparaCusto(const tConstrutivo &dado1, const tConstrutivo &dado2){
   return dado1.custo < dado2.custo;
 }
@@ -163,6 +150,8 @@ int Construtivo(vector<int> &solucao, int inicio, float alpha){
 	vector<tConstrutivo> listaMelhorVertices;
 	tConstrutivo lista;
 
+	solucao.clear();
+
 	solucao.push_back(inicio);
 
 	for(i = 1; i <= dimension; i++){
@@ -173,7 +162,7 @@ int Construtivo(vector<int> &solucao, int inicio, float alpha){
 		listaDeVertices.push_back(i);
 	}
 
-	verticeEscolhido = rand() % listaDeVertices.size()+1;
+	verticeEscolhido = (rand() % listaDeVertices.size()-1) + 1;
 
 	solucao.push_back(listaDeVertices[verticeEscolhido]);
 
@@ -184,32 +173,21 @@ int Construtivo(vector<int> &solucao, int inicio, float alpha){
 	while(1){
 		quantVertices = listaDeVertices.size();
 		tamanhoDaSolucao = solucao.size();
-
-		//cout << "tamanho" << quantVertices << " "<< tamanhoDaSolucao << " "<< solucao[0] << endl;
-		
-
 		 
 		for (i = 0; i < quantVertices; i++) { //custo de adiconar os vertices restante na solução
-      for (j = 1; j < tamanhoDaSolucao; j++) {
-        lista.vertice = listaDeVertices[i];
-        lista.posicao = j;
-        lista.custo = (matrizAdj[solucao[j-1]][listaDeVertices[i]] + matrizAdj[listaDeVertices[i]][solucao[j]]) - matrizAdj[solucao[j-1]][solucao[j]];
-        listaMelhorVertices.push_back(lista);
-        //cout<< "adicionei" << endl;
-      }
-    }
+	      for (j = 1; j < tamanhoDaSolucao; j++) {
+	        lista.vertice = listaDeVertices[i];
+	        lista.posicao = j;
+	        lista.custo = (matrizAdj[solucao[j-1]][listaDeVertices[i]] + matrizAdj[listaDeVertices[i]][solucao[j]]) - matrizAdj[solucao[j-1]][solucao[j]];
+	        listaMelhorVertices.push_back(lista);
+	      }
+    	}
 
-    sort(listaMelhorVertices.begin(), listaMelhorVertices.end(), comparaCusto);
+	    sort(listaMelhorVertices.begin(), listaMelhorVertices.end(), comparaCusto);
 
-    //cout << "cheguei" << listaMelhorVertices.size()  << "agora"<< quantVertices << " " <<tamanhoDaSolucao << endl;
+	    verticeEscolhido = (int)(rand() % listaMelhorVertices.size()+1) * alpha;
 
-    verticeEscolhido = (int)(rand() % listaMelhorVertices.size()+1) * alpha;
-
-    //cout << "cheguei" << verticeEscolhido << endl;
-
-    solucao.emplace(solucao.begin() + listaMelhorVertices[verticeEscolhido].posicao, listaMelhorVertices[verticeEscolhido].vertice);
-		
-		//cout << "timm" << solucao.size() << endl;
+	    solucao.emplace(solucao.begin() + listaMelhorVertices[verticeEscolhido].posicao, listaMelhorVertices[verticeEscolhido].vertice);
 
 		custoDaSolucao += listaMelhorVertices[verticeEscolhido].custo;
 
@@ -222,9 +200,6 @@ int Construtivo(vector<int> &solucao, int inicio, float alpha){
 
 		listaMelhorVertices.clear();
 
-		//cout << "terminei" << listaDeVertices.size()<< " " << quantVertices << endl;
-
-
 		if(quantVertices == 1){
 			break;
 		}
@@ -232,21 +207,14 @@ int Construtivo(vector<int> &solucao, int inicio, float alpha){
 
 	solucao.push_back(inicio);
 	custoDaSolucao += matrizAdj[solucao[solucao.size() - 2]][inicio];
-	//cout <<"aqq" << solucao[solucao.size() - 2] << endl;
-		for(i = 0; i < solucao.size(); i++){
-			cout << solucao[i] << " ";
-		}
 
-		cout << endl << custoDaSolucao << endl;
-
-		return custoDaSolucao;
+	return custoDaSolucao;
 }
 
 int RVND(vector<int> &solucao, int custoDaSolucao){
 	int i;
-	int custoAtual;
+	int custoAtual = 0, custo = custoDaSolucao;
 	vector<int> solucaoParcial;
-	vector<int> vizinhancaAtual = {1, 2};
 	vector<int> vizinhanca = {1, 2};
 	int tamanhoDaSolucao = solucao.size(), tamanhoVizinhanca = vizinhanca.size(), vizinhancaEscolhida = 0;
 
@@ -255,12 +223,12 @@ int RVND(vector<int> &solucao, int custoDaSolucao){
 	}
 
 	while(1){
-		vizinhancaEscolhida = (int)(rand() % (vizinhancaAtual.size()));
+		vizinhancaEscolhida = (int)(rand() % (vizinhanca.size()));
 
-		switch(vizinhancaAtual[vizinhancaEscolhida]){
+		switch(vizinhanca[vizinhancaEscolhida]){
 			case 1:
 				custoAtual = Reinsercao(solucaoParcial, 1, custoDaSolucao);
-
+			
 			case 2:
 				custoAtual = Swap(solucaoParcial, custoDaSolucao);
 
@@ -276,15 +244,15 @@ int RVND(vector<int> &solucao, int custoDaSolucao){
 				solucao.push_back(solucaoParcial[i]);
 			}
 
-			vizinhancaAtual.clear();
+			vizinhanca.clear();
 			for(i = 0; i < tamanhoVizinhanca; i++){
-				vizinhancaAtual.push_back(vizinhanca[i]);
+				vizinhanca.push_back(i);
 			}
 		}else{
-			vizinhancaAtual.erase(vizinhanca.begin() + vizinhancaEscolhida);
+			vizinhanca.erase(vizinhanca.begin() + vizinhancaEscolhida);
 		}
 
-		if(vizinhancaAtual.size() == 0){
+		if(vizinhanca.size() == 0){
 				break;
 			}
 	}
@@ -292,24 +260,35 @@ int RVND(vector<int> &solucao, int custoDaSolucao){
 	return custoDaSolucao;
 }
 
+int GRASP(vector<int> &solucao, int maxIteracoes, float alpha){
+	int i, custoDaSolucao = __INT_MAX__, custoAtual = 0;
+	vector <int> solucaoParcial;
 
+	for(i = 0; i < maxIteracoes; i++){
+		custoAtual = Construtivo(solucaoParcial, 1, alpha);
+		custoAtual = RVND(solucaoParcial, custoAtual);
+
+		if(custoAtual < custoDaSolucao){
+			solucao = solucaoParcial;
+			custoDaSolucao = custoAtual;
+		}
+
+	}
+
+	return custoDaSolucao;
+}
 //MAIN
 int main(int argc, char** argv){
+	readData(argc, argv, &dimension, &matrizAdj);
+	//printData();
 
-  readData(argc, argv, &dimension, &matrizAdj);
-  //printData();
+	vector<int> solucao;
+	int custo = 0;
+	float alpha = 0.5;
 
-  vector<int> solucao;
-  int custo = 0, nu = 1;
-  float alpha = 0.8;
-  
-  //RVND(solucao, num);
+	custo = GRASP(solucao, 50, alpha);
 
-  custo = Construtivo(solucao, 1, alpha);
+ 	cout << endl << "Custo final: " << custo << endl;
 
-  //Reinsercao(solucao, 1, custo);
-
- 	Swap(solucao, custo);
-
-  return 0;
+  	return 0;
 }
