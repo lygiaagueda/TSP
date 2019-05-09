@@ -1,0 +1,37 @@
+alpha = 0.3,ótimo,média solução,melhor solucao,media tempo,gap,média solução,melhor solucao,media tempo,gap
+burma14.tsp, ,4587,4040,2, ,3603,3508,5, 
+bayg29.tsp, ,2899,2691,5.2, ,2132,2061,39.4, 
+att48.tsp, ,28297,25322,12, ,17656,16782,192.2, 
+eil76.tsp, ,1481,1404,26.3, ,980,944,756.8, 
+gr137.tsp, ,342396,313106,168, ,187288,180401,5754.1, 
+
+alpha = 0.4,ótimo,média solução,melhor solucao,media tempo,gap,média solução,melhor solucao,media tempo,gap
+burma14.tsp, ,4861,4504,3.8, ,3668,3547,11.5, 
+bayg29.tsp, ,3211,2883,6.3, ,2282,2102,43.9, 
+att48.tsp, ,32967,28896,11.2, ,18983,17938,189.1, 
+eil76.tsp, ,1709,1641,27.9, ,1052,1013,783.9, 
+gr137.tsp, ,390302,346759,170.5, ,200553,193719,5871.3, 
+alpha = 0.5,ótimo,média solução,melhor solucao,media tempo,gap,média solução,melhor solucao,media tempo,gap
+burma14.tsp, ,5204,4263,3.5, ,3863,3635,7.2, 
+bayg29.tsp, ,3448,3226,6, ,2314,2183,39.5, 
+att48.tsp, ,36123,31460,10.5, ,19960,18630,189.6, 
+eil76.tsp, ,1848,1711,27.6, ,1129,1087,777.7, 
+gr137.tsp, ,435295,387992,167.8, ,223173,213121,5872.6, 
+alpha = 0.6,ótimo,média solução,melhor solucao,media tempo,gap,média solução,melhor solucao,media tempo,gap
+burma14.tsp, ,5233,4663,3.9, ,3757,3649,9.8, 
+bayg29.tsp, ,3733,3414,5.9, ,2439,2342,42, 
+att48.tsp, ,38898,33274,10.4, ,21445,20068,192.1, 
+eil76.tsp, ,1929,1760,27.3, ,1166,1110,784.2, 
+gr137.tsp, ,475552,429014,171.1, ,236025,227861,5970.1, 
+alpha = 0.7,ótimo,média solução,melhor solucao,media tempo,gap,média solução,melhor solucao,media tempo,gap
+burma14.tsp, ,5886,5108,2, ,3917,3716,4.8, 
+bayg29.tsp, ,3859,3515,5.6, ,2497,2359,41, 
+att48.tsp, ,41952,34356,13, ,22330,20922,196.2, 
+eil76.tsp, ,2109,1965,28.8, ,1213,1129,789, 
+gr137.tsp, ,506339,460039,171.3, ,252982,244243,6020.6, 
+alpha = 0.8,ótimo,média solução,melhor solucao,media tempo,gap,média solução,melhor solucao,media tempo,gap
+burma14.tsp, ,5850,4374,3.4, ,3943,3635,8.7, 
+bayg29.tsp, ,4157,3997,5.2, ,2617,2509,43.2, 
+att48.tsp, ,43919,40943,13.3, ,23446,21658,202.8, 
+eil76.tsp, ,2208,2128,24.9, ,1274,1188,783.2, 
+gr137.tsp, ,546322,518169,171, ,267446,242635,6075.9, 

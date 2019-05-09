@@ -266,27 +266,94 @@ int GRASP(vector<int> &solucao, int maxIteracoes, float alpha){
 
 	for(i = 0; i < maxIteracoes; i++){
 		custoAtual = Construtivo(solucaoParcial, 1, alpha);
-		custoAtual = RVND(solucaoParcial, custoAtual);
+		custoAtual = RVND(solucaoParcial, custoAtual);	
 
 		if(custoAtual < custoDaSolucao){
 			solucao = solucaoParcial;
 			custoDaSolucao = custoAtual;
 		}
-
 	}
 
 	return custoDaSolucao;
 }
 //MAIN
 int main(int argc, char** argv){
-	readData(argc, argv, &dimension, &matrizAdj);
-	//printData();
+	clock_t Ticks[2];
+	double tempo = 0, tempoMedio = 0, tempoMedioEur = 0, tempoEur = 0;
+	int iteracoes = 10, gap = 0, i, custoEur = 0;
+	int custoMedio = 0, melhorCusto = __INT_MAX__, custoMedioEur = 0, melhorCustoEur = __INT_MAX__;
 
-	vector<int> solucao;
-	int custo = 0;
-	float alpha = 0.5;
+  	readData(argc, argv, &dimension, &matrizAdj);
 
-	custo = GRASP(solucao, 50, alpha);
+  	ofstream saida;
+
+  	saida.open("saida.txt", ios::app);
+
+
+  	vector<int> solucao;
+  	int custo = 0;
+  	float alpha = 0.8;
+  	
+  	for(i = 0; i < iteracoes; i++){
+	  	Ticks[1] = clock();
+	  	custo = Construtivo(solucao, 1 , alpha);
+	  	Ticks[2] = clock();
+
+	  	tempo = ((Ticks[1] - Ticks[0]) * 1000/ CLOCKS_PER_SEC);
+	  	tempoMedio+= tempo;
+
+	  	custoMedio += custo;
+
+	  	if(custo < melhorCusto){
+	  		melhorCusto = custo;
+	  	}
+  	}
+  	
+
+  	tempoMedio = tempoMedio/ iteracoes;
+  	custoMedio = custoMedio / iteracoes;
+
+  	for(i = 0; i < iteracoes; i++){
+	  	Ticks[1] = clock();
+	  	custoEur = GRASP(solucao, 30, alpha);
+	  	Ticks[2] = clock();
+
+	  	tempoEur = ((Ticks[1] - Ticks[0]) * 1000/ CLOCKS_PER_SEC);
+	  	tempoMedioEur+= tempoEur;
+
+	  	custoMedioEur += custoEur;
+
+	  	if(custoEur < melhorCustoEur){
+	  		melhorCustoEur = custoEur;
+	  	}
+  	}
+  	
+
+  	tempoMedioEur = tempoMedioEur/ iteracoes;
+  	custoMedioEur = custoMedioEur / iteracoes;
+/*
+  	saida << "alpha = " << alpha <<  ",";
+  	saida << "ótimo" << ",";
+  	saida << "média solução" << ",";
+  	saida << "melhor solucao" << ",";
+  	saida << "media tempo" << ",";
+  	saida << "gap" << ",";
+  	saida << "média solução" << ",";
+  	saida << "melhor solucao" << ",";
+  	saida << "media tempo" << ",";
+  	saida << "gap" << endl;
+  	*/
+  	saida << argv[1] << ",";
+  	saida << " " << ",";
+  	saida << custoMedio << ",";
+  	saida << melhorCusto << ",";
+  	saida << tempoMedio << ",";
+  	saida << " " << ",";
+  	saida << custoMedioEur << ",";
+  	saida << melhorCustoEur << ",";
+  	saida << tempoMedioEur << ",";
+  	saida << " " << endl;
+	//custo = GRASP(solucao, 50, alpha);
 
  	cout << endl << "Custo final: " << custo << endl;
 
